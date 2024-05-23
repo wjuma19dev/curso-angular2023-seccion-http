@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 
-interface Post {
+export interface Post {
   title: string;
   comment: string;
   id?: string;
@@ -16,6 +16,7 @@ interface Post {
 export class AppComponent implements OnInit {
 
   loadedPosts: Post[] = [];
+  isFetching: boolean = false;
 
   constructor(
     private http: HttpClient
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit {
   }
 
   fetchPosts() {
+    this.isFetching = true;
     this.http.get<{ [key: string]: Post }>('https://angularcompleteguide2023-default-rtdb.firebaseio.com/posts.json')
     .pipe(
       // Mapping response data to converte into a valid array
@@ -54,6 +56,7 @@ export class AppComponent implements OnInit {
     )
     .subscribe(
       (posts) => {
+        this.isFetching = false;
         this.loadedPosts = posts;
       }
     )

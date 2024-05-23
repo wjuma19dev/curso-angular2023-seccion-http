@@ -45,25 +45,12 @@
       <div class="row">
         <div 
           class="col-sm-4 mt-3" 
-          *ngIf="loadedPosts.length == 0; else listGroup"
+          *ngIf="loadedPosts.length == 0 && !isFetching; else listGroup"
         >No posts data</div>
         <ng-template #listGroup>
-          <ul class="list-group mt-3">
-            <a 
-              href="" 
-              class="list-group-item list-group-item-action"
-              *ngFor="let post of loadedPosts"
-            >
-              <div class="d-flex w-100 justify-content-between">
-                <h5>{{ post.title }}</h5>
-                <small>3 days ago</small>
-              </div>
-              <p class="mb-1">{{ post.comment }}</p>
-              <small>ID: {{ post.id }}</small>
-            </a>
-          </ul>
+          <app-list-group [loadedPosts]="loadedPosts"></app-list-group>
         </ng-template>
-
+        <div class="loader" *ngIf="isFetching">Loading ...</div>
       </div>
     </div>
   </div>

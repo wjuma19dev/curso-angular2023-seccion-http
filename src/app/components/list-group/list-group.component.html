@@ -1,1 +1,6 @@
-<p>list-group works!</p>
+<ul class="list-group mt-3">
+  <app-item 
+    *ngFor="let post of loadedPosts"
+    [post]="post"
+  ></app-item>
+</ul>
