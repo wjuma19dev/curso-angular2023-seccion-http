@@ -11,9 +11,7 @@ export class PostService {
 
     constructor(
         private http: HttpClient
-    ) {
-        console.log('PostService')
-    }
+    ) {}
 
     createPost(title: string, comment: string) {
         const data = { title, comment, createAt: Date.now() } 

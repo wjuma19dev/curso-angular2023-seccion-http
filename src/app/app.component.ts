@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { PostService } from './services/post.service';
+import { NgForm } from '@angular/forms';
 
 export interface Post {
   title: string;
@@ -19,8 +20,10 @@ const base_URL = 'https://curso-angular2023-post-default-rtdb.firebaseio.com/pos
 })
 export class AppComponent implements OnInit {
 
+  @ViewChild('postForm', { static: true }) postForm: NgForm;
   loadedPosts: Post[] = [];
   isFetching: boolean = false;
+  errors: HttpErrorResponse = null;
 
   constructor(
     private http: HttpClient,
@@ -34,6 +37,7 @@ export class AppComponent implements OnInit {
   onCreatePost( postData: Post ): void {
     const { title, comment } = postData;
     this.postService.createPost( title, comment );
+    this.postForm.resetForm();
   }
 
   onFetchPosts() {
@@ -42,6 +46,11 @@ export class AppComponent implements OnInit {
       (posts) => {
           this.isFetching = false;
           this.loadedPosts = posts;
+      },
+      error => {
+        this.isFetching = false;
+        this.errors = error;
+        console.log(error)
       }
     )
   }

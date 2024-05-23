@@ -9,13 +9,15 @@ import { ListGroupComponent } from './components/list-group/list-group.component
 import { ItemComponent } from './components/list-group/item/item.component';
 import { MomentPipe } from './pipes/moment.pipe';
 import { PostService } from './services/post.service';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListGroupComponent,
     ItemComponent,
-    MomentPipe
+    MomentPipe,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
