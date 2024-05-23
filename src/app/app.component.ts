@@ -1,12 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
+import { PostService } from './services/post.service';
 
 export interface Post {
   title: string;
   comment: string;
   id?: string;
+  createAt: Date;
 }
+
+const base_URL = 'https://curso-angular2023-post-default-rtdb.firebaseio.com/posts.json'
 
 @Component({
   selector: 'app-root',
@@ -19,45 +23,33 @@ export class AppComponent implements OnInit {
   isFetching: boolean = false;
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private postService: PostService
   ){}
 
   ngOnInit(): void {
-    this.fetchPosts();
+    this.onFetchPosts();
   }
 
   onCreatePost( postData: Post ): void {
-    this.http.post<{ name: string }>(
-      'https://angularcompleteguide2023-default-rtdb.firebaseio.com/posts.json',
-      postData
-    ).subscribe(
-      (responseData) => console.log(responseData)
-    )
+    const { title, comment } = postData;
+    this.postService.createPost( title, comment );
   }
 
   onFetchPosts() {
-    this.fetchPosts();
+    this.isFetching = true;
+    this.postService.fetchPosts().subscribe(
+      (posts) => {
+          this.isFetching = false;
+          this.loadedPosts = posts;
+      }
+    )
   }
 
-  fetchPosts() {
-    this.isFetching = true;
-    this.http.get<{ [key: string]: Post }>('https://angularcompleteguide2023-default-rtdb.firebaseio.com/posts.json')
-    .pipe(
-      // Mapping response data to converte into a valid array
-      map((responseData) => {
-        const postArray: Post[] = [];
-        for( const key in responseData ) {
-          if(responseData.hasOwnProperty(key)) {
-            postArray.push({ ...responseData[key], id: key })
-          }
-        }
-        return postArray;
-      })
-    )
-    .subscribe(
-      (posts) => {
-        this.isFetching = false;
-        this.loadedPosts = posts;
+  onDeletePosts() {
+    this.postService.deletePost().subscribe(
+      () => {
+        this.loadedPosts = [];
       }
     )
   }

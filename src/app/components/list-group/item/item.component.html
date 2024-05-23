@@ -4,7 +4,7 @@
 >
   <div class="d-flex w-100 justify-content-between">
     <h5>{{ post.title }}</h5>
-    <small>3 days ago</small>
+    <small>{{ post.createAt | moment: 'fromNow' }}</small>
   </div>
   <p class="mb-1">{{ post.comment }}</p>
   <small>ID: {{ post.id }}</small>

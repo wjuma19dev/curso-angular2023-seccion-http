@@ -7,12 +7,15 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ListGroupComponent } from './components/list-group/list-group.component';
 import { ItemComponent } from './components/list-group/item/item.component';
+import { MomentPipe } from './pipes/moment.pipe';
+import { PostService } from './services/post.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     ListGroupComponent,
-    ItemComponent
+    ItemComponent,
+    MomentPipe
   ],
   imports: [
     BrowserModule,
@@ -20,7 +23,7 @@ import { ItemComponent } from './components/list-group/item/item.component';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [PostService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
