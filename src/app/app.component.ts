@@ -11,7 +11,7 @@ export interface Post {
   createAt: Date;
 }
 
-const base_URL = 'https://curso-angular2023-post-default-rtdb.firebaseio.com/posts.json'
+const base_URL = 'https://curso-angular2023-post-default-rtdb.firebaseio.com/posts.json';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   @ViewChild('postForm', { static: true }) postForm: NgForm;
   loadedPosts: Post[] = [];
   isFetching: boolean = false;
-  errors: HttpErrorResponse = null;
+  error: string = '';
 
   constructor(
     private http: HttpClient,
@@ -32,11 +32,21 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.onFetchPosts();
+    this.postService.error.subscribe(
+      (error) => {
+        this.error = error;
+      }
+    )
   }
 
   onCreatePost( postData: Post ): void {
     const { title, comment } = postData;
+    if(title === '' || comment === '') {
+      this.postService.error.next('Todos los campos son obligatorios.')
+      return;
+    }
     this.postService.createPost( title, comment );
+    // console.log('Error value is: ', this.error)
     this.postForm.resetForm();
   }
 
@@ -49,18 +59,25 @@ export class AppComponent implements OnInit {
       },
       error => {
         this.isFetching = false;
-        this.errors = error;
-        console.log(error)
+        this.error = error.message;
       }
     )
   }
 
   onDeletePosts() {
+    // if(this.loadedPosts.length < 1) {
+    //   alert('No post data to delete');
+    //   return;
+    // }
     this.postService.deletePost().subscribe(
       () => {
         this.loadedPosts = [];
       }
     )
+  }
+
+  onHandlerError() {
+    this.error = '';
   }
 
 }
